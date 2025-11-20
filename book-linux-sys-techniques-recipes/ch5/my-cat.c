@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#define MAXSIZE 4096
+
+int main ( int argc, char* argv[] ){
+
+	int fd;
+	char buf[MAXSIZE] = {0};
+	
+	if( argc != 2){
+
+		fprintf(stderr, "Usage: %s [filename]", argv[0]);
+		return 1;
+
+	}
+
+	if( ( fd = open(argv[1], O_RDONLY) ) == -1 ){
+
+		perror("Cannot open the file");
+		return errno;
+
+	}
+
+	if( read(fd, buf, sizeof(buf) ) == -1 ){
+
+		perror("Cannot read the file");
+		return errno;
+
+	}
+
+	if( write(1, buf, strlen(buf)) == -1 ){
+
+		perror("Cannot show the content");
+		return errno;
+
+	}
+	
+	return 0;
+
+}
